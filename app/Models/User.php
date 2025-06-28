@@ -10,7 +10,17 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable , HasUuids;
+    use HasFactory, HasApiTokens, Notifiable, HasUuids;
+
+    /**
+     * The primary key type is string (UUID)
+     */
+    public $incrementing = false;
+
+    /**
+     * The primary key data type
+     */
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -43,6 +53,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        // 'password' => 'hashed', // Only if you want auto hashing (Laravel 10+)
+        // Add this to ensure UUIDs are properly cast
+        'id' => 'string'
     ];
 }

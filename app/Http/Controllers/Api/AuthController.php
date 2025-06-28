@@ -21,7 +21,7 @@ class AuthController extends Controller
             'lastname'  => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users',
             'password'  => 'required|string|min:8',
-            'phone'     => 'required', // Optional, remove if not needed
+            'phone'     => 'required|unique:users', // Optional, remove if not needed
         ];
 
         // Custom validation messages
@@ -31,6 +31,7 @@ class AuthController extends Controller
             'email.required'     => 'Email is required.',
             'email.email'        => 'Email must be a valid email address.',
             'email.unique'       => 'This email is already registered.',
+            'phone.unique'       => 'This phone is already registered.',
             'password.required'  => 'Password is required.',
             'password.min'       => 'Password must be at least 8 characters.',
         ];
@@ -76,16 +77,16 @@ class AuthController extends Controller
    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'login_type' => 'required|in:email,mobile',
+            'login_type' => 'required|in:email,phone',
             'email'      => 'required_if:login_type,email|email',
-            'mobile'     => 'required_if:login_type,mobile',
+            'phone'     => 'required_if:login_type,phone',
             'password'   => 'required',
         ], [
             'login_type.required'   => 'Login type is required.',
-            'login_type.in'         => 'Login type must be either email or mobile.',
+            'login_type.in'         => 'Login type must be either email or phone.',
             'email.required_if'     => 'Email is required when login type is email.',
             'email.email'           => 'Email must be valid.',
-            'mobile.required_if'    => 'Mobile is required when login type is mobile.',
+            'phone.required_if'    => 'Phone is required when login type is phone.',
             'password.required'     => 'Password is required.',
         ]);
 
@@ -96,7 +97,7 @@ class AuthController extends Controller
         if ($request->login_type === 'email') {
             $user = User::where('email', $request->email)->first();
         } else {
-            $user = User::where('phone', $request->mobile)->first();
+            $user = User::where('phone', $request->phone)->first();
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
@@ -119,6 +120,50 @@ class AuthController extends Controller
 
         return ResponseBuilder::success($responseData, 'Login successful', 200);
     }
+
+    public function getuser($id)
+    {
+        $user = User::where('id', $id)->first();
+
+        if (!$user) {
+            return ResponseBuilder::error('User not found', 404);
+        }
+
+        $responseData = ['user' => $user];
+
+        return ResponseBuilder::success($responseData, 'Data fetch successful', 200);
+    }
+
+    public function forgotPasswordByPhone(Request $request)
+    {
+         $validator = Validator::make($request->all(), [
+            'phone' => 'required|string',
+        ], [
+            'phone.required'        => 'Phone is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseBuilder::error($validator->errors()->first(), 422);
+        }
+
+        $user = User::where('phone', $request->phone)->first();
+        if (!$user) {
+            return ResponseBuilder::error('User not found', 404);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+         $responseData = [
+            'userData' => [
+                'id'        => $user->id,
+                'name'      => $user->name,
+                'phone'     => $user->phone,
+            ]
+        ];
+        return ResponseBuilder::success($responseData, 'Password reset successful.', 200);
+    }
+
 
     // User Logout
     public function logout(Request $request)
