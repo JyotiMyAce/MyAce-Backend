@@ -1,88 +1,153 @@
 @extends('layout.master')
-@section('content')
 @section('title', __('MyAce | Login'))
-<div class="account-content">
-    <div class="login-wrapper">
-        <div class="login-content">
-            <form action="index.html">
-                <div class="login-userset">
-                    <div class="login-logo logo-normal">
-                        <img src="{{ asset('assets/img/logo.png')}}" alt="img">
-                    </div>
-                    <a href="index.html" class="login-logo logo-white">
-                        <img src="{{ asset('assets/img/logo-white.png')}}" alt="">
-                    </a>
-                    <div class="login-userheading">
-                        <h3>Sign In</h3>
-                        <h4>Access the Dreamspos panel using your email and passcode.</h4>
-                    </div>
-                    <div class="form-login">
-                        <label>Email Address</label>
-                        <div class="form-addons">
-                            <input type="text" class="form-control">
-                            <img src="{{ asset('assets/img/icons/mail.svg')}}" alt="img">
-                        </div>
-                    </div>
-                    <div class="form-login">
-                        <label>Password</label>
-                        <div class="pass-group">
-                            <input type="password" class="pass-input">
-                            <span class="fas toggle-password fa-eye-slash"></span>
-                        </div>
-                    </div>
-                    {{-- <div class="form-login authentication-check">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="custom-control custom-checkbox">
-                                    <label class="checkboxs ps-4 mb-0 pb-0 line-height-1">
-                                        <input type="checkbox">
-                                        <span class="checkmarks"></span>Remember me
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-6 text-end">
-                                <a class="forgot-link" href="forgot-password-2.html">Forgot Password?</a>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <div class="form-login">
-                        <button type="submit" class="btn btn-login">Sign In</button>
-                    </div>
-                    {{-- <div class="signinform">
-                        <h4>New on our platform?<a href="register-2.html" class="hover-a"> Create an account</a></h4>
-                    </div>
-                    <div class="form-setlogin or-text">
-                        <h4>OR</h4>
-                    </div>
-                    <div class="form-sociallink">
-                        <ul class="d-flex">
-                            <li>
-                                <a href="javascript:void(0);" class="facebook-logo">
-                                    <img src="{{ asset('assets/img/icons/facebook-logo.svg')}}" alt="Facebook">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <img src="{{ asset('assets/img/icons/google.png')}}" alt="Google">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="apple-logo">
-                                    <img src="{{ asset('assets/img/icons/apple-logo.svg')}}" alt="Apple">
-                                </a>
-                            </li>
+@section('content')
+    @push('custom-css')
+        <style>
+            .pass-group {
+                position: relative;
+            }
 
-                        </ul>
-                        <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
-                            <p>Copyright &copy; 2023 DreamsPOS. All rights reserved</p>
+            .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 15px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                z-index: 2;
+                color: #aaa;
+                font-size: 16px;
+                line-height: 1;
+                pointer-events: auto;
+            }
+
+            label.error {
+                margin-top: 4px;
+                font-size: 13px;
+                color: red;
+                display: block;
+                position: absolute;
+                bottom: -33px;
+                left: 0;
+            }
+
+            .pass-group {
+                margin-bottom: 25px;
+            }
+        </style>
+    @endpush
+    <div class="account-content">
+        <div class="login-wrapper">
+            <div class="login-content">
+                <form id="login_form" name="login_form">
+                    @csrf
+                    <div class="login-userset">
+                        <div class="login-logo logo-normal">
+                            <img src="{{ asset('assets/img/logo.png') }}" alt="img">
                         </div>
-                    </div> --}}
-                </div>
-            </form>
-        </div>
-        <div class="login-img">
-            <img src="{{ asset('assets/img/authentication/login02.png')}}" alt="img">
+                        <a href="index.html" class="login-logo logo-white">
+                            <img src="{{ asset('assets/img/logo-white.png') }}" alt="">
+                        </a>
+                        <div class="login-userheading">
+                            <h3>Sign In</h3>
+                            <h4>Access the Dreamspos panel using your email and passcode.</h4>
+                        </div>
+
+                        <div class="form-login">
+                            <label>Email Address</label>
+                            <div class="form-addons">
+                                <input type="text" class="form-control" name="email" autocomplete="email">
+                                <img src="{{ asset('assets/img/icons/mail.svg') }}" alt="img">
+                            </div>
+                        </div>
+
+                        <div class="form-login position-relative">
+                            <label>Password</label>
+                            <div class="pass-group">
+                                <input type="password" class="form-control" name="password" autocomplete="current-password">
+                                <i class="toggle-password fa fa-fw fa-eye-slash"></i>
+                            </div>
+                        </div>
+
+                        <div class="success_msg mt-3 text-success" style="display:none;"></div>
+                        <div class="error_msg mt-3 text-danger" style="display:none;"></div>
+
+                        <div class="form-login">
+                            <button type="submit" class="btn btn-login">Sign In</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="login-img">
+                <img src="{{ asset('assets/img/authentication/login02.png') }}" alt="img">
+            </div>
         </div>
     </div>
-</div>
+
 @endsection
+
+@push('custom-script')
+    <script>
+        $(document).ready(function() {
+            
+            $('#login_form').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    password: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    email: {
+                        required: 'Please enter your email',
+                        email: 'Please enter a valid email format',
+                    },
+                    password: {
+                        required: 'Please enter your password'
+                    },
+                },
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: `{{ route('login') }}`,
+                        type: "POST",
+                        data: $(form).serialize(),
+                        beforeSend: function() {
+                            $('.error_msg, .success_msg').hide().html('');
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('.success_msg').html(response.message).fadeIn();
+                                setTimeout(() => {
+                                    $('.success_msg').fadeOut();
+                                    // if (response.redirect_url) {
+                                    //     window.location.href = response
+                                    //         .redirect_url;
+                                    // }
+                                }, 2000);
+                            } else {
+                                $('.error_msg').html(response.message).fadeIn();
+                                setTimeout(() => $('.error_msg').fadeOut(), 4000);
+                            }
+                        },
+                        error: function(xhr) {
+                            $('.error_msg').html('Something went wrong. Please try again.')
+                                .fadeIn();
+                            setTimeout(() => $('.error_msg').fadeOut(), 4000);
+
+                            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                $.each(xhr.responseJSON.errors, function(key, value) {
+                                    const input = $(`[name="${key}"]`);
+                                    input.after(
+                                        `<label class="error serverside_error">${value[0]}</label>`
+                                    );
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+@endpush

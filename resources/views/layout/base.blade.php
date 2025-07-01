@@ -33,7 +33,8 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+     @stack('custom-css')
 </head>
 
 <body>
@@ -46,6 +47,7 @@
 
     <!-- jQuery -->
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 
     <!-- Feather Icon JS -->
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
@@ -67,7 +69,8 @@
     <!-- Custom JS -->
     <script src="{{ asset('assets/js/theme-script.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
-
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+     @stack('custom-script')
 </body>
 
 </html>
