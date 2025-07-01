@@ -15,7 +15,7 @@ Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']
 
 Route::get('/banners', [HomeController::class, 'getBanner']);
 Route::get('/categories', [HomeController::class, 'categories']); 
-Route::get('/top_categories', [HomeController::class, 'top_categories']); 
+Route::get('/top-categories', [HomeController::class, 'top_categories']); 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');

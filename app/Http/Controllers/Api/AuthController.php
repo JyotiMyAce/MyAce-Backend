@@ -151,7 +151,7 @@ class AuthController extends Controller
             return ResponseBuilder::error('User not found', 404);
         }
 
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($request->newpassword);
         $user->save();
 
          $responseData = [

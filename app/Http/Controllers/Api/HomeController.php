@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller; 
 use App\Models\Banner;
+use App\Models\Category;
 use App\Helpers\ResponseBuilder;
 
 use Illuminate\Http\Request;
@@ -12,11 +13,8 @@ class HomeController extends Controller
 
     public function getBanner()
     {
-        $banners = Banner::all();
-        $responseData = [
-            'data' => $banners
-        ];
-        return ResponseBuilder::success($responseData, 'Banners fetched successfully', 201);
+        $banners = Banner::select('id','url','image')->get();
+        return ResponseBuilder::success($banners, 'Banners fetched successfully', 201);
     }
 
     public function categories()
@@ -27,8 +25,8 @@ class HomeController extends Controller
 
     public function top_categories()
     {
-        $categories = Category::select('id', 'name', 'slug', 'parent_id', 'image')->where('is_featured',1)->get();
-        return response()->json(['categories' => $categories]);
+        $categories = Category::select('id', 'name', 'slug', 'image')->where('is_featured',1)->get();
+        return ResponseBuilder::success($categories, 'Categories fetched successfully', 201);
     }
 
 }
