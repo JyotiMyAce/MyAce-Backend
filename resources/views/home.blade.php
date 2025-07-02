@@ -7,7 +7,7 @@
             <div class="col-xl-3 col-sm-6 col-12 d-flex">
                 <div class="dash-widget w-100">
                     <div class="dash-widgetimg">
-                        <span><img src="assets/img/icons/dash1.svg" alt="img"></span>
+                        <span><img src="{{ asset('assets/img/icons/dash1.svg') }}" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
                         <h5>$<span class="counters" data-count="307144.00">$307,144.00</span></h5>
@@ -18,7 +18,7 @@
             <div class="col-xl-3 col-sm-6 col-12 d-flex">
                 <div class="dash-widget dash1 w-100">
                     <div class="dash-widgetimg">
-                        <span><img src="assets/img/icons/dash2.svg" alt="img"></span>
+                        <span><img src="{{ asset('assets/img/icons/dash2.svg') }}" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
                         <h5>$<span class="counters" data-count="4385.00">$4,385.00</span></h5>
@@ -29,7 +29,7 @@
             <div class="col-xl-3 col-sm-6 col-12 d-flex">
                 <div class="dash-widget dash2 w-100">
                     <div class="dash-widgetimg">
-                        <span><img src="assets/img/icons/dash3.svg" alt="img"></span>
+                        <span><img src="{{ asset('assets/img/icons/dash3.svg') }}" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
                         <h5>$<span class="counters" data-count="385656.50">$385,656.50</span></h5>
@@ -40,7 +40,7 @@
             <div class="col-xl-3 col-sm-6 col-12 d-flex">
                 <div class="dash-widget dash3 w-100">
                     <div class="dash-widgetimg">
-                        <span><img src="assets/img/icons/dash4.svg" alt="img"></span>
+                        <span><img src="{{ asset('assets/img/icons/dash4.svg') }}" alt="img"></span>
                     </div>
                     <div class="dash-widgetcontent">
                         <h5>$<span class="counters" data-count="40000.00">$400.00</span></h5>
@@ -77,7 +77,7 @@
                         <h5>Purchase Invoice</h5>
                     </div>
                     <div class="dash-imgs">
-                        <img src="assets/img/icons/file-text-icon-01.svg" class="img-fluid" alt="icon">
+                        <img src="{{ asset('assets/img/icons/file-text-icon-01.svg') }}" class="img-fluid" alt="icon">
                     </div>
                 </div>
             </div>
@@ -159,7 +159,7 @@
                                         <td>1</td>
                                         <td class="productimgname">
                                             <a href="product-list.html" class="product-img">
-                                                <img src="assets/img/products/stock-img-01.png" alt="product">
+                                                <img src="{{ asset('assets/img/products/stock-img-01.png') }}" alt="product">
                                             </a>
                                             <a href="product-list.html">Lenevo 3rd Generation</a>
                                         </td>
@@ -169,7 +169,7 @@
                                         <td>2</td>
                                         <td class="productimgname">
                                             <a href="product-list.html" class="product-img">
-                                                <img src="assets/img/products/stock-img-06.png" alt="product">
+                                                <img src="{{ asset('assets/img/products/stock-img-06.png') }}" alt="product">
                                             </a>
                                             <a href="product-list.html">Bold V3.2</a>
                                         </td>
@@ -179,7 +179,7 @@
                                         <td>3</td>
                                         <td class="productimgname">
                                             <a href="product-list.html" class="product-img">
-                                                <img src="assets/img/products/stock-img-02.png" alt="product">
+                                                <img src="{{ asset('assets/img/products/stock-img-02.png') }}" alt="product">
                                             </a>
                                             <a href="product-list.html">Nike Jordan</a>
                                         </td>
@@ -189,7 +189,7 @@
                                         <td>4</td>
                                         <td class="productimgname">
                                             <a href="product-list.html" class="product-img">
-                                                <img src="assets/img/products/stock-img-03.png" alt="product">
+                                                <img src="{{ asset('assets/img/products/stock-img-03.png') }}" alt="product">
                                             </a>
                                             <a href="product-list.html">Apple Series 5 Watch</a>
                                         </td>
@@ -235,7 +235,7 @@
                                 <td>
                                     <div class="productimgname">
                                         <a href="javascript:void(0);" class="product-img stock-img">
-                                            <img src="assets/img/products/expire-product-01.png" alt="product">
+                                            <img src="{{ asset('assets/img/products/expire-product-01.png') }}" alt="product">
                                         </a>
                                         <a href="javascript:void(0);">Red Premium Handy </a>
                                     </div>
@@ -264,7 +264,7 @@
                                 <td>
                                     <div class="productimgname">
                                         <a href="javascript:void(0);" class="product-img stock-img">
-                                            <img src="assets/img/products/expire-product-02.png" alt="product">
+                                            <img src="{{ asset('assets/img/products/expire-product-02.png') }}" alt="product">
                                         </a>
                                         <a href="javascript:void(0);">Iphone 14 Pro</a>
                                     </div>
@@ -293,7 +293,7 @@
                                 <td>
                                     <div class="productimgname">
                                         <a href="javascript:void(0);" class="product-img stock-img">
-                                            <img src="assets/img/products/expire-product-03.png" alt="product">
+                                            <img src="{{ asset('assets/img/products/expire-product-03.png') }}" alt="product">
                                         </a>
                                         <a href="javascript:void(0);">Black Slim 200 </a>
                                     </div>
@@ -322,7 +322,7 @@
                                 <td>
                                     <div class="productimgname">
                                         <a href="javascript:void(0);" class="product-img stock-img">
-                                            <img src="assets/img/products/expire-product-04.png" alt="product">
+                                            <img src="{{ asset('assets/img/products/expire-product-04.png') }}" alt="product">
                                         </a>
                                         <a href="javascript:void(0);">Woodcraft Sandal</a>
                                     </div>
@@ -351,7 +351,7 @@
                                 <td>
                                     <div class="productimgname">
                                         <a href="javascript:void(0);" class="product-img stock-img">
-                                            <img src="assets/img/products/stock-img-03.png" alt="product">
+                                            <img src="{{ asset('assets/img/products/stock-img-03.png') }}" alt="product">
                                         </a>
                                         <a href="javascript:void(0);">Apple Series 5 Watch </a>
                                     </div>

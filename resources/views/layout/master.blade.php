@@ -5,7 +5,7 @@
         <div class="main-wrapper">
             <!-- partial -->
 
-            @if (!\Route::is('admin-login'))
+            @if (!\Route::is('admin.login.form'))
                 @include('layout.include.header')
                 @include('layout.include.sidebar')
             @endif

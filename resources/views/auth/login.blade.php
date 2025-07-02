@@ -67,10 +67,10 @@
                                 <i class="toggle-password fa fa-fw fa-eye-slash"></i>
                             </div>
                         </div>
-
-                        <div class="success_msg mt-3 text-success" style="display:none;"></div>
-                        <div class="error_msg mt-3 text-danger" style="display:none;"></div>
-
+                        <div class="alert alert-success success_msg" style="display:none;" role="alert"> 
+                        </div>
+                        <div class="alert alert-danger error_msg" style="display:none;" role="alert"> 
+                        </div>
                         <div class="form-login">
                             <button type="submit" class="btn btn-login">Sign In</button>
                         </div>
@@ -88,7 +88,7 @@
 @push('custom-script')
     <script>
         $(document).ready(function() {
-            
+
             $('#login_form').validate({
                 rules: {
                     email: {
@@ -110,7 +110,7 @@
                 },
                 submitHandler: function(form) {
                     $.ajax({
-                        url: `{{ route('login') }}`,
+                        url: `{{ route('admin.login') }}`,
                         type: "POST",
                         data: $(form).serialize(),
                         beforeSend: function() {
@@ -121,10 +121,7 @@
                                 $('.success_msg').html(response.message).fadeIn();
                                 setTimeout(() => {
                                     $('.success_msg').fadeOut();
-                                    // if (response.redirect_url) {
-                                    //     window.location.href = response
-                                    //         .redirect_url;
-                                    // }
+                                        window.location.href = `{{route('admin.dashboard')}}`;
                                 }, 2000);
                             } else {
                                 $('.error_msg').html(response.message).fadeIn();
