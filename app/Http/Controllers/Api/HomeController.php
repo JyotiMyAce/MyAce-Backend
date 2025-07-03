@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller; 
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\HomeVideo;
 use App\Helpers\ResponseBuilder;
-
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +13,7 @@ class HomeController extends Controller
 
     public function getBanner()
     {
-        $banners = Banner::select('id','url','image')->get();
+        $banners = Banner::select('id','url','image')->where('type','main')->get();
         return ResponseBuilder::success($banners, 'Banners fetched successfully', 201);
     }
 
@@ -27,6 +27,18 @@ class HomeController extends Controller
     {
         $categories = Category::select('id', 'name', 'slug', 'image')->where('is_featured',1)->get();
         return ResponseBuilder::success($categories, 'Categories fetched successfully', 201);
+    }
+
+     public function getslider()
+    {
+        $banners = Banner::select('id','image','benefit_image','url')->where('type','benefits')->get();
+        return ResponseBuilder::success($banners, 'Slider fetched successfully', 201);
+    }
+
+     public function getVideoList()
+    {
+        $banners = HomeVideo::select('id','first_video','second_video','third_video')->get();
+        return ResponseBuilder::success($banners, 'Videos fetched successfully', 201);
     }
 
 }
