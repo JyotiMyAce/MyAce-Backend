@@ -41,4 +41,10 @@ class HomeController extends Controller
         return ResponseBuilder::success($banners, 'Videos fetched successfully', 201);
     }
 
+    public function all_categories()
+    {
+        $categories = Category::select('id', 'name')->get();
+        return ResponseBuilder::success($categories, 'Categories fetched successfully', 201);
+    }
+
 }
