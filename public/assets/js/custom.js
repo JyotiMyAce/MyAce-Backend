@@ -5,6 +5,16 @@ $.ajaxSetup({
     },
 });
 
+function handleServerError(formName, errors) {
+    $("form[name='" + formName + "']").find('.text-danger.serverside_error').remove();
+    $.each(errors, function (field, messages) {
+        var $input = $("form[name='" + formName + "']").find("[name='" + field + "']");
+        $.each(messages, function (index, message) {
+            $input.after('<span class="text-danger serverside_error">' + message + '</span>');
+        });
+    });
+}
+
 $(".toggle-password").on("click", function () {
     const $icon = $(this);
     const $input = $icon.siblings("input");

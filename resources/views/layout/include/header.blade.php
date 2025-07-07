@@ -1,6 +1,6 @@
 <!-- Header -->
 @php
-    $auth = Auth::user();
+    $auth = Auth::guard('admin')->user();
 @endphp
 <div class="header">
 

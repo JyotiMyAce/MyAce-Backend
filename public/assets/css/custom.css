@@ -1,3 +1,16 @@
 .error{
     color: red !important;
 }
+
+.error_msg,
+.success_msg {
+    display: none;
+}
+
+.error_msg {
+    color: red;
+}
+
+.dataTables_paginate .pagination li {
+    margin: 0 15px !important;
+}

@@ -7,18 +7,18 @@
                     <h6 class="submenu-hdr">Main</h6>
                     <ul>
                         <li class="submenu">
-                            <a href="javascript:void(0);" class="subdrop active"><i
+                            <a href="javascript:void(0);" class="subdrop {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i
                                     data-feather="grid"></i><span>Dashboard</span><span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="index.html" class="active">Admin Dashboard</a></li>
+                                <li><a href="index.html" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Admin Dashboard</a></li>
                                 {{-- <li><a href="sales-dashboard.html">Sales Dashboard</a></li> --}}
                             </ul>
                         </li>
                         <li class="submenu">
-                            <a href="javascript:void(0);"><i data-feather="smartphone"></i><span>Website</span><span
+                            <a href="javascript:void(0);" class="{{ request()->routeIs('admin.banner') ||  request()->routeIs('admin.banner.create') ? 'active' : '' }}"><i data-feather="smartphone"></i><span>Website</span><span
                                     class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="{{route('admin.banner')}}">Banner</a></li>
+                                <li><a href="{{route('admin.banner')}}" class="{{ request()->routeIs('admin.banner') ||  request()->routeIs('admin.banner.create') ? 'active' : '' }}">Banner</a></li>
                                 {{-- <li class="submenu submenu-two"><a href="javascript:void(0);">Call<span
                                             class="menu-arrow inside-submenu"></span></a>
                                     <ul>
