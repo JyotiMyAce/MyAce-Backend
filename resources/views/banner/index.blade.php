@@ -140,7 +140,7 @@
                                 <th>Sr.no</th>
                                 {{-- <th>Created by</th> --}}
                                 <th>Redirect url</th>
-                                <th>Image</th>
+                                {{-- <th>Image</th> --}}
                                 <th>Type</th>
                                 <th>Status</th>
                                 <th>Status</th>
@@ -170,10 +170,10 @@
                 data: 'redirect_url',
                 name: 'redirect_url'
             }, 
-            {
-                data: 'banner_img',
-                name: 'banner_img'
-            }, 
+            // {
+            //     data: 'banner_img',
+            //     name: 'banner_img'
+            // }, 
             {
                 data: 'type',
                 name: 'type'

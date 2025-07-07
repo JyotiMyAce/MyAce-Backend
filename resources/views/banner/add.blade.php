@@ -29,7 +29,8 @@
             </div>
 
             <!-- Form Start -->
-            <form name="banner-form" id="banner" enctype="multipart/form-data">
+            <form name="add_banner" id="add_banner" enctype="multipart/form-data">
+                @csrf
                 <div class="card">
                     <div class="card-body add-product pb-0">
                         <div class="accordion-card-one accordion" id="accordionExample">
@@ -61,7 +62,8 @@
                                             <div class="col-lg-6 col-sm-6 col-12">
                                                 <div class="mb-3 add-product">
                                                     <label class="form-label">Redirect URL</label>
-                                                    <input type="text" class="form-control" name="redirect_url" id="redirect_url" />
+                                                    <input type="text" class="form-control" name="redirect_url"
+                                                        id="redirect_url" />
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +138,8 @@
 
                     </div>
                 </div>
-
+                <div class="alert alert-success success_msg" role="alert"></div>
+                <div class="alert alert-danger error_msg" role="alert"></div>
                 <!-- Buttons -->
                 <div class="col-lg-12">
                     <div class="btn-addproduct mb-4">
@@ -152,41 +155,87 @@
 
 @push('custom-script')
     <script>
+        // $(document).ready(function() {
+        //     $('#banner_type').on('change', function() {
+        //         const selectedType = $(this).val();
+        //         resetBannerImage();
+        //         resetBenefitImage();
+        //         resetVideo();
+
+        //         if (selectedType === 'banner') {
+        //             $('.banner_img').show();
+        //             $('.benfit_img').hide();
+        //             $('.video').hide();
+        //         } else if (selectedType === 'benefit') {
+        //             $('.banner_img').hide();
+        //             $('.video').hide();
+        //             $('.benfit_img').show();
+        //         } else if (selectedType === 'video') {
+        //             $('.banner_img').hide();
+        //             $('.benfit_img').hide();
+        //             $('.video').show();
+        //         } else {
+        //             $('.banner_img, .benfit_img').hide();
+        //         }
+        //     });
+
+        //     function resetBannerImage() {
+        //         $('#banner_img').val('');
+        //         clearCanvas('banner_img_canv1');
+        //     }
+
+        //     function resetVideo() {
+        //         $('#video').val('');
+        //         clearCanvas('video_canv1');
+        //     }
+
+        //     function resetBenefitImage() {
+        //         $('#product_img').val('');
+        //         $('#product_ben_img').val('');
+        //         clearCanvas('product_img_canv1');
+        //         clearCanvas('product_ben_img_canv');
+        //     }
+
+        //     function clearCanvas(canvasId) {
+        //         const canvas = document.getElementById(canvasId);
+        //         const ctx = canvas.getContext('2d');
+        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //         canvas.style.display = 'none';
+        //     }
+
+
+        //     // Preview selected image using canvas
+        //     function previewImage(input, canvasId) {
+        //         const file = input.files[0];
+        //         if (file) {
+        //             const reader = new FileReader();
+        //             reader.onload = function(e) {
+        //                 const canvas = document.getElementById(canvasId);
+        //                 const ctx = canvas.getContext('2d');
+        //                 const img = new Image();
+        //                 img.onload = function() {
+        //                     const canvasWidth = canvas.width = 200;
+        //                     const canvasHeight = canvas.height = 150;
+
+        //                     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        //                     const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height);
+        //                     const x = (canvasWidth - img.width * scale) / 2;
+        //                     const y = (canvasHeight - img.height * scale) / 2;
+
+        //                     ctx.drawImage(img, 0, 0, img.width, img.height, x, y, img.width * scale, img
+        //                         .height *
+        //                         scale);
+        //                     canvas.style.display = 'inline-block';
+        //                 };
+        //                 img.src = e.target.result;
+        //             };
+        //             reader.readAsDataURL(file);
+        //         }
+        //     }
         $(document).ready(function() {
-            // Show/hide sections based on selected type
-            $('#banner_type').on('change', function() {
-                const selectedType = $(this).val();
-
-                // Clear all previews and file inputs
-                resetBannerImage();
-                resetBenefitImage();
-                resetVideo();
-
-                if (selectedType === 'banner') {
-                    $('.banner_img').show();
-                    $('.benfit_img').hide();
-                    $('.video').hide();
-                } else if (selectedType === 'benefit') {
-                    $('.banner_img').hide();
-                    $('.video').hide();
-                    $('.benfit_img').show();
-                } else if (selectedType === 'video') {
-                    $('.banner_img').hide();
-                    $('.benfit_img').hide();
-                    $('.video').show();
-                } else {
-                    $('.banner_img, .benfit_img').hide();
-                }
-            });
-
             function resetBannerImage() {
                 $('#banner_img').val('');
                 clearCanvas('banner_img_canv1');
-            }
-
-            function resetVideo() {
-                $('#video').val('');
-                clearCanvas('video_canv1');
             }
 
             function resetBenefitImage() {
@@ -196,62 +245,93 @@
                 clearCanvas('product_ben_img_canv');
             }
 
+            function resetVideo() {
+                $('#video').val('');
+                clearCanvas('video_canv1');
+            }
+
             function clearCanvas(canvasId) {
                 const canvas = document.getElementById(canvasId);
                 const ctx = canvas.getContext('2d');
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 canvas.style.display = 'none';
             }
-        });
 
-        // Preview selected image using canvas
-        function previewImage(input, canvasId) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const canvas = document.getElementById(canvasId);
-                    const ctx = canvas.getContext('2d');
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvasWidth = canvas.width = 200;
-                        const canvasHeight = canvas.height = 150;
+            // Type change logic
+            $('#banner_type').on('change', function() {
+                const selectedType = $(this).val();
 
-                        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                        const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height);
-                        const x = (canvasWidth - img.width * scale) / 2;
-                        const y = (canvasHeight - img.height * scale) / 2;
+                resetBannerImage();
+                resetBenefitImage();
+                resetVideo();
 
-                        ctx.drawImage(img, 0, 0, img.width, img.height, x, y, img.width * scale, img.height *
-                            scale);
-                        canvas.style.display = 'inline-block';
+                $('.banner_img, .benfit_img, .video').hide(); // Hide all first
+
+                if (selectedType === 'banner') {
+                    $('.banner_img').show();
+                } else if (selectedType === 'benefit') {
+                    $('.benfit_img').show();
+                } else if (selectedType === 'video') {
+                    $('.video').show();
+                }
+            });
+
+            // Image Preview
+            window.previewImage = function(input, canvasId) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const canvas = document.getElementById(canvasId);
+                        const ctx = canvas.getContext('2d');
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvasWidth = canvas.width = 200;
+                            const canvasHeight = canvas.height = 150;
+                            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                            const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height);
+                            const x = (canvasWidth - img.width * scale) / 2;
+                            const y = (canvasHeight - img.height * scale) / 2;
+                            ctx.drawImage(img, 0, 0, img.width, img.height, x, y, img.width * scale, img
+                                .height * scale);
+                            canvas.style.display = 'inline-block';
+                        };
+                        img.src = e.target.result;
                     };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        $(document).ready(function() {
+                    reader.readAsDataURL(file);
+                }
+            };
             $("form[name='add_banner']").validate({
                 rules: {
                     banner_type: {
                         required: true
                     },
                     redirect_url: {
-                        required: true,
+                        required: function() {
+                            return $('#banner_type').val() !==
+                                'video';
+                        },
+                        url: true
                     },
                     banner_img: {
-                        required: true
+                        required: function() {
+                            return $('#banner_type').val() === 'banner';
+                        }
                     },
                     product_img: {
-                        required: true
+                        required: function() {
+                            return $('#banner_type').val() === 'benefit';
+                        }
                     },
                     product_ben_img: {
-                        required: true
+                        required: function() {
+                            return $('#banner_type').val() === 'benefit';
+                        }
                     },
                     video: {
-                        required: true
+                        required: function() {
+                            return $('#banner_type').val() === 'video';
+                        }
                     },
                 },
                 messages: {
@@ -259,10 +339,11 @@
                         required: 'Select type'
                     },
                     redirect_url: {
-                        required: 'Enter description',
+                        required: 'Enter redirect URL',
+                        url: 'Enter a valid URL (e.g., https://example.com)'
                     },
                     banner_img: {
-                        required: 'Select banner  image'
+                        required: 'Select banner image'
                     },
                     product_img: {
                         required: 'Select product image'
@@ -270,9 +351,9 @@
                     product_ben_img: {
                         required: 'Select product benefit image'
                     },
-                    product_ben_img: {
+                    video: {
                         required: 'Select video'
-                    },
+                    }
                 },
                 submitHandler: function(form) {
                     $.ajax({
@@ -283,27 +364,31 @@
                         contentType: false,
                         success: function(response) {
                             if (response.status == 'success') {
-                                $("form[name='add_features']").find('.serverside_error')
+                                $("form[name='add_banner']").find('.serverside_error')
                                     .remove();
-                                $('.success_msg').html(response.msg);
-                                $('.success_msg').fadeIn();
+                                $('.success_msg').html(response.msg).fadeIn();
+
                                 setTimeout(function() {
                                     $('.success_msg').fadeOut();
                                 }, 5000);
-                                $('#add_features')[0].reset();
-                                window.location.href = "{{ route('features_list') }}"
+                                $("form[name='add_banner']")[0].reset();
+                                $("form[name='add_banner']")[0].reset();
+                                $('.banner_img, .benfit_img, .video').hide();
+                                resetBannerImage();
+                                resetBenefitImage();
+                                resetVideo();
                             } else {
-                                $("form[name='add_features']").find('.serverside_error')
+                                $("form[name='add_banner']").find('.serverside_error')
                                     .remove();
-                                $('.error_msg').html(response.msg);
-                                $('.error_msg').fadeIn();
+                                $('.error_msg').html(response.msg).fadeIn();
+
                                 setTimeout(function() {
                                     $('.error_msg').fadeOut();
                                 }, 5000);
                             }
                         },
-                        error: function(xhr, status, error) {
-                            handleServerError('add_features', xhr.responseJSON.errors);
+                        error: function(xhr) {
+                            handleServerError('add_banner', xhr.responseJSON.errors);
                         }
                     });
                 }
