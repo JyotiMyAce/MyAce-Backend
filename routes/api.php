@@ -16,6 +16,10 @@ Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']
 Route::get('/banners', [HomeController::class, 'getBanner']);
 Route::get('/categories', [HomeController::class, 'categories']); 
 Route::get('/top-categories', [HomeController::class, 'top_categories']); 
+Route::get('/benefitsslider-list', [HomeController::class, 'getslider']); 
+Route::get('/videos-list', [HomeController::class, 'getVideoList']); 
+Route::get('/all-categories', [HomeController::class, 'getAllCategories']); 
+Route::get('/banner-basedon-category', [HomeController::class, 'getCategoriesBanners']); 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
