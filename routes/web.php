@@ -29,7 +29,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/', 'index')->name('admin.banner');
                 Route::get('create', 'create_banner')->name('admin.banner.create');
                 Route::post('insert', 'insert_banner')->name('admin.banner.insert');
-                Route::get('edit', 'edit_banner')->name('admin.banner.edit');
+                Route::get('edit/{id}', 'edit_banner')->name('admin.banner.edit');
                 Route::get('delete', 'delete_banner')->name('admin.banner.delete');
             });
         });

@@ -115,7 +115,8 @@ class BannerController extends Controller
             }
 
             if ($request->hasFile('video')) {
-                $banner->video = $request->file('video')->store('videos', 'banners/videos');
+                // $banner->video = $request->file('video')->store('video', 'banners/videos');
+                $banner->video = $request->file('video')->store('videos', 'public');
             }
 
             $banner->save();
@@ -135,5 +136,10 @@ class BannerController extends Controller
                 'msg' => 'Something went wrong: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function edit_banner(Request $request,$id){
+        $bannerData = Banner::find($id);
+        return view('banner.add',compact($bannerData));
     }
 }
