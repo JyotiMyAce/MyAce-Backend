@@ -33,12 +33,10 @@
                 </li>
             </ul>
             <div class="page-btn">
-                <a href="add-product.html" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
+                <a href="{{route('admin.banner.create')}}" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
                     New Banner</a>
             </div>
         </div>
-
-        <!-- /product list -->
         <div class="card table-list-card">
             <div class="card-body">
                 {{-- <div class="table-top">
@@ -135,26 +133,67 @@
                     </div>
                 </div> --}}
                 <!-- /Filter -->
-                <div class="table-responsive product-list">
-                    <table class="table datanew">
+                <div class="table-responsive">
+                    <table id="banner-list" class="table  data-table">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>SKU</th>
-                                <th>Category</th>
-                                <th>Brand</th>
-                                <th>Price</th>
-                                <th>Unit</th>
-                                <th>Qty</th>
-                                <th>Created by</th>
-                                <th class="no-sort">Action</th>
+                                <th>Sr.no</th>
+                                {{-- <th>Created by</th> --}}
+                                <th>Redirect url</th>
+                                <th>Image</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                     </table>
                 </div>
             </div>
         </div>
-        <!-- /product list -->
     </div>
 </div>
+
+@push('custom-script')
+    <script>
+        var table = $('#banner-list').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.banner') }}",
+            columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false
+            }, 
+            {
+                data: 'redirect_url',
+                name: 'redirect_url'
+            }, 
+            {
+                data: 'banner_img',
+                name: 'banner_img'
+            }, 
+            {
+                data: 'type',
+                name: 'type'
+            }, 
+            {
+                data: 'status',
+                name: 'status'
+            }, 
+            {
+                data: 'created_at',
+                name: 'created_at'
+            }, {
+                data: 'action',
+                name: 'action',
+                orderable: false
+            }],
+            drawCallback: function(settings, json) {
+                $('[data-toggle=tooltip]').tooltip();
+            }
+        });
+    </script>
+@endpush
 @endsection

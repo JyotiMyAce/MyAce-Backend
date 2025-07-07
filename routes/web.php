@@ -6,21 +6,6 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Support\Facades\Route;
 
-// Route::prefix('admin')->group(function () {
-//     Route::middleware(['guest:admin', PreventBackHistory::class])->group(function () {
-//         Route::controller(AuthController::class)->group(function () {
-//             Route::get('/', 'index')->name('admin-login'); // login page
-//             Route::post('/login', 'login')->name('admin.login'); // ⬅️ USE a unique name here
-//         });
-//     });
-
-//     Route::middleware(['auth:admin', PreventBackHistory::class])->group(function () {
-//         Route::controller(HomeController::class)->group(function () {
-//             Route::get('/dashboard', 'index')->name('admin-dashboard');
-//         });
-//     });
-// });
-
 Route::prefix('admin')->group(function () {
 
     // Guest routes (unauthenticated admin)
@@ -42,6 +27,10 @@ Route::prefix('admin')->group(function () {
         Route::prefix('banner')->group(function () {
             Route::controller(BannerController::class)->group(function () {
                 Route::get('/', 'index')->name('admin.banner');
+                Route::get('create', 'create_banner')->name('admin.banner.create');
+                Route::post('insert', 'insert_banner')->name('admin.banner.insert');
+                Route::get('edit', 'edit_banner')->name('admin.banner.edit');
+                Route::get('delete', 'delete_banner')->name('admin.banner.delete');
             });
         });
     });

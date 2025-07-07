@@ -1,3 +1,7 @@
 .error{
     color: red !important;
 }
+
+.dataTables_paginate .pagination li {
+    margin: 0 15px !important;
+}

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class RedirectIfAuthenticated
     //     return $next($request);
     // }
 
-    public function handle(Request $request, Closure $next, string ...$guards): \Illuminate\Http\Response|RedirectResponse
+    public function handle($request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
 
@@ -29,7 +30,7 @@ class RedirectIfAuthenticated
                 if ($guard === 'admin') {
                     return redirect()->route('admin.dashboard');
                 }
-                return redirect('/admin'); // Default for other guards
+                return redirect(RouteServiceProvider::HOME);
             }
         }
 
