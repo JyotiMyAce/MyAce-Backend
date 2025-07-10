@@ -20,7 +20,7 @@ abstract class Controller
             $image = $request->file($key);
             $originalName = $image->getClientOriginalName();
             $file_name = time() . '_' . $originalName; // Create unique filename
-            $fileName = $image->storeAs($folder_name, $file_name);
+            $fileName = $image->storeAs($folder_name, $file_name, 'public');
             // dd($fileName);
             if (!empty($old_img)) {
                 // Assuming $old_img contains the complete file path

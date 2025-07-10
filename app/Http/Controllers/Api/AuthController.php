@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\ResponseBuilder;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -79,18 +80,21 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'login_type'   => 'required|in:email,phone,google',
-            'email'        => 'required_if:login_type,email|email',
+            'email'        => 'required_if:login_type,email,google|email',
             'phone'        => 'required_if:login_type,phone',
             'password'     => 'required_if:login_type,email,phone',
-            'google_token' => 'required_if:login_type,google',
+            'google_id'    => 'required_if:login_type,google',
+            'name'         => 'required_if:login_type,google',
+            // Add other fields as needed (e.g., avatar)
         ], [
             'login_type.required'   => 'Login type is required.',
             'login_type.in'         => 'Login type must be email, phone, or google.',
-            'email.required_if'     => 'Email is required when login type is email.',
+            'email.required_if'     => 'Email is required when login type is email or google.',
             'email.email'           => 'Email must be valid.',
             'phone.required_if'     => 'Phone is required when login type is phone.',
             'password.required_if'  => 'Password is required for email or phone login.',
-            'google_token.required_if' => 'Google token is required for Google login.',
+            'google_id.required_if' => 'Google ID is required for Google login.',
+            'name.required_if'      => 'Name is required for Google login.',
         ]);
 
         if ($validator->fails()) {
@@ -98,31 +102,26 @@ class AuthController extends Controller
         }
 
         if ($request->login_type === 'google') {
-            try {
-                $googleUser = Socialite::driver('google')->stateless()->userFromToken($request->google_token);
-            } catch (\Exception $e) {
-                return ResponseBuilder::error('Invalid Google token.', 401);
-            }
-
-            $user = User::where('google_id', $googleUser->getId())
-                        ->orWhere('email', $googleUser->getEmail())
+            $user = User::where('google_id', $request->google_id)
+                        ->orWhere('email', $request->email)
                         ->first();
 
             if (!$user) {
                 $user = User::create([
-                    'name'      => $googleUser->getName(),
-                    'email'     => $googleUser->getEmail(),
-                    'google_id' => $googleUser->getId(),
-                    'password'  => bcrypt(Str::random(16)),
+                    'name'      => $request->name,
+                    'email'     => $request->email,
+                    'google_id' => $request->google_id,
+                    'password'  => bcrypt(Str::random(16)), 
                 ]);
             } else if (!$user->google_id) {
-                $user->google_id = $googleUser->getId();
+                $user->google_id = $request->google_id;
                 $user->save();
             }
 
             $token = $user->createToken('auth_token')->accessToken;
 
         } else {
+            // Email or phone login
             if ($request->login_type === 'email') {
                 $user = User::where('email', $request->email)->first();
             } else {
@@ -144,6 +143,7 @@ class AuthController extends Controller
                 'name'      => $user->name,
                 'email'     => $user->email,
                 'phone'     => $user->phone,
+                // Add other fields as needed
             ],
             'token' => $token
         ];
