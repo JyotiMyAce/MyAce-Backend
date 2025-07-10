@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\ResponseBuilder;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -77,43 +79,71 @@ class AuthController extends Controller
    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'login_type' => 'required|in:email,phone',
-            'email'      => 'required_if:login_type,email|email',
-            'phone'     => 'required_if:login_type,phone',
-            'password'   => 'required',
+            'login_type'   => 'required|in:email,phone,google',
+            'email'        => 'required_if:login_type,email,google|email',
+            'phone'        => 'required_if:login_type,phone',
+            'password'     => 'required_if:login_type,email,phone',
+            'google_id'    => 'required_if:login_type,google',
+            'name'         => 'required_if:login_type,google',
+            // Add other fields as needed (e.g., avatar)
         ], [
             'login_type.required'   => 'Login type is required.',
-            'login_type.in'         => 'Login type must be either email or phone.',
-            'email.required_if'     => 'Email is required when login type is email.',
+            'login_type.in'         => 'Login type must be email, phone, or google.',
+            'email.required_if'     => 'Email is required when login type is email or google.',
             'email.email'           => 'Email must be valid.',
-            'phone.required_if'    => 'Phone is required when login type is phone.',
-            'password.required'     => 'Password is required.',
+            'phone.required_if'     => 'Phone is required when login type is phone.',
+            'password.required_if'  => 'Password is required for email or phone login.',
+            'google_id.required_if' => 'Google ID is required for Google login.',
+            'name.required_if'      => 'Name is required for Google login.',
         ]);
 
         if ($validator->fails()) {
             return ResponseBuilder::error($validator->errors()->first(), 422);
         }
 
-        if ($request->login_type === 'email') {
-            $user = User::where('email', $request->email)->first();
+        if ($request->login_type === 'google') {
+            $user = User::where('google_id', $request->google_id)
+                        ->orWhere('email', $request->email)
+                        ->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'name'      => $request->name,
+                    'email'     => $request->email,
+                    'google_id' => $request->google_id,
+                    'password'  => bcrypt(Str::random(16)), 
+                ]);
+            } else if (!$user->google_id) {
+                $user->google_id = $request->google_id;
+                $user->save();
+            }
+
+            $token = $user->createToken('auth_token')->accessToken;
+
         } else {
-            $user = User::where('phone', $request->phone)->first();
-        }
+            // Email or phone login
+            if ($request->login_type === 'email') {
+                $user = User::where('email', $request->email)->first();
+            } else {
+                $user = User::where('phone', $request->phone)->first();
+            }
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return ResponseBuilder::error('Invalid credentials.', 401);
-        }
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return ResponseBuilder::error('Invalid credentials.', 401);
+            }
 
-        $token = $user->createToken('auth_token')->accessToken;
+            $token = $user->createToken('auth_token')->accessToken;
+        }
 
         $responseData = [
             'userData' => [
                 'id'        => $user->id,
-                'firstname' => $user->firstname,
-                'lastname'  => $user->lastname,
+                'firstname' => $user->firstname ?? '',
+                'lastname'  => $user->lastname ?? '',
                 'name'      => $user->name,
                 'email'     => $user->email,
                 'phone'     => $user->phone,
+                // Add other fields as needed
             ],
             'token' => $token
         ];
