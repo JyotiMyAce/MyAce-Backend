@@ -13,23 +13,37 @@ abstract class Controller
     protected $notFoundStatus    = 404;
     protected $invalidPermission = 403;
 
+    // protected function __imageSave($request, $key = '', $folder_name = '', $old_img = ''): ?string
+    // {
+    //     $fileName = null;
+    //     if ($request->hasFile($key) && !empty($key) && !empty($folder_name)) {
+    //         $image = $request->file($key);
+    //         $originalName = $image->getClientOriginalName();
+    //         $file_name = time() . '_' . $originalName; // Create unique filename
+    //         $fileName = $image->storeAs($folder_name, $file_name);
+    //         if (!empty($old_img)) {
+    //             if (Storage::exists($old_img)) {
+    //                 Storage::delete($old_img);
+    //             }
+    //         }
+    //     }
+
+    //     return $fileName ?: null; 
+    // }
+
     protected function __imageSave($request, $key = '', $folder_name = '', $old_img = ''): ?string
     {
         $fileName = null;
         if ($request->hasFile($key) && !empty($key) && !empty($folder_name)) {
-            $image = $request->file($key);
-            $originalName = $image->getClientOriginalName();
+            $file = $request->file($key);
+            $originalName = $file->getClientOriginalName();
             $file_name = time() . '_' . $originalName; // Create unique filename
-            $fileName = $image->storeAs($folder_name, $file_name);
-            // dd($fileName);
-            if (!empty($old_img)) {
-                // Assuming $old_img contains the complete file path
-                if (Storage::exists($old_img)) {
-                    Storage::delete($old_img);
-                }
+            $fileName = $file->storeAs($folder_name, $file_name, 'public'); // Explicitly use public disk
+            if (!empty($old_img) && Storage::disk('public')->exists($old_img)) {
+                Storage::disk('public')->delete($old_img);
             }
         }
 
-        return $fileName ?: null; // Return filename or null
+        return $fileName ?: null;
     }
 }
