@@ -29,9 +29,10 @@ Route::prefix('admin')->group(function () {
                 Route::get('/', 'index')->name('admin.banner');
                 Route::get('create', 'create_banner')->name('admin.banner.create');
                 Route::post('insert', 'insert_banner')->name('admin.banner.insert');
+                Route::post('status', 'status_banner')->name('admin.banner.status');
                 Route::get('edit/{id}', 'edit_banner')->name('admin.banner.edit');
                 Route::post('update', 'update_banner')->name('admin.banner.update');
-                Route::get('delete', 'delete_banner')->name('admin.banner.delete');
+                Route::post('delete', 'delete_banner')->name('admin.banner.delete');
             });
         });
     });

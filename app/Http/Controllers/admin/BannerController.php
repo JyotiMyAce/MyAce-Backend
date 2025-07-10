@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Helpers\ResponseBuilder;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,9 +26,13 @@ class BannerController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '';
-
+                    $checked = ($row->status) ? 'checked' : '';
+                    $btn .= '<label class="switch">
+                        <input type="checkbox" ' . $checked . ' switch="manual" class="changestatus" data-id = "' . $row->id . '" data-datatable = "banner-list" data-text = "banner">
+                        <span class="slider round"></span>
+                        </label>';
                     $btn .= '<a href="' . route('admin.banner.edit', $row->id) . '" class="btn btn-xs" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>';
-                    $btn .= '<a href="javascript:void(0)" data-id ="' . $row->id . '" data-toggle="tooltip" data-placement="top" title="Delete" data-datatable = "featuresTable" data-url = "' . route('admin.banner.delete') . '" class="btn  btn-xs  deletemodel "><i class="fa fa-trash"></i></a>';
+                    $btn .= '<a href="javascript:void(0)" data-id ="' . $row->id . '" data-toggle="tooltip" data-placement="top" title="Delete" data-datatable = "banner-list" data-url = "' . route('admin.banner.delete') . '" class="btn  btn-xs  delete_btn "  data-text = "banner"><i class="fa fa-trash"></i></a>';
                     return $btn;
                 })
                 ->addColumn('created_at', function ($row) {
@@ -267,6 +273,64 @@ class BannerController extends Controller
                 'status' => 'error',
                 'msg' => 'Something went wrong: ' . $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function status_banner(Request $request){
+         try {
+            // return $request->all();
+            $id = $request->dataId;
+            $status = $request->datastatus;
+
+            $banner = Banner::find($id);
+            if (!$banner) {
+                return ResponseBuilder::error("Data not found", 402);
+            }
+
+            DB::beginTransaction();
+            if ($banner->status && $status == "block") {
+                $banner->status = 0;
+                $msg = "Successfully! In-active";
+            } else if ($banner->status == 0 && $status == 'unblock') {
+                $banner->status = 1;
+                $msg = "Successfully! Active";
+            }
+            $banner->save();
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'msg'   => $msg,
+                'type'  => $banner->status
+            ]);
+            return ResponseBuilder::success(null, $msg);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
+            return ResponseBuilder::error($th->getMessage(), 500);
+        }
+    }
+
+    public function delete_banner(Request $request){
+        try {
+            $user =Auth::guard('admin')->user();
+            $dataId = $request->dataId;
+            $banner = Banner::find($dataId);
+            if (!$banner) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Record not found'
+                ]);
+            }
+            $banner->delete();
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'Deleted Successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Deletion process encountered an error: ' . $e->getMessage()
+            ]);
         }
     }
 }

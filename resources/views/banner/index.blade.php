@@ -194,6 +194,9 @@
                 $('[data-toggle=tooltip]').tooltip();
             }
         });
+
+
+        const STATUS_UPDATE_ROUTE = "{{ route('admin.banner.status') }}";
     </script>
 @endpush
 @endsection
